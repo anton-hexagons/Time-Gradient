@@ -3,9 +3,8 @@ import sys
 import numpy as np
 import scipy.ndimage as spimg
 import png
-import math
 
-if len(sys.argv) != 4:
+if len(sys.argv) != 5:
 	print('[frame folder] [blend (add/max)] [color (#_#_#)] [color (#_#_#)]')
 	exit()
 
@@ -40,7 +39,7 @@ for i in range(len(frames)):
 	blended_frame = frames[i] * blended_color
 	if blend_style == "add":
 		pix_arr += blended_frame
-	else if blend_style == "max":
+	elif blend_style == "max":
 		pix_arr = np.maximum(pix_arr, blended_frame)
 
 print("saving")
