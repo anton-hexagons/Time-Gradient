@@ -5,7 +5,7 @@ import scipy.ndimage as spimg
 import png
 
 if len(sys.argv) != 5:
-	print('[frame folder] [blend (add/max/diff)] [color (#_#_#)] [color (#_#_#)]')
+	print('[frame folder] [blend (add/max/min/diff)] [color (#_#_#)] [color (#_#_#)]')
 	exit()
 
 print("loading frames")
@@ -13,8 +13,8 @@ print("loading frames")
 frame_folder = sys.argv[1]
 frame_files = os.listdir(frame_folder)
 blend_style = sys.argv[2]
-if blend_style not in ["add", "max", "diff"]:
-	print("[blend (add/max/diff)]")
+if blend_style not in ["add", "max", "min", "diff"]:
+	print("[blend (add/max/min/diff)]")
 	exit()
 color0 = np.zeros((3))
 for i in range(3):
@@ -32,6 +32,8 @@ for frame_file in frame_files:
 print("blending frames")
 
 pix_arr = np.zeros(frames[0].shape)
+if blend_style == "min":
+	pix_arr += 255
 
 for i in range(len(frames)):
 	fraction = i / (len(frames) - 1)
@@ -41,6 +43,8 @@ for i in range(len(frames)):
 		pix_arr += blended_frame
 	elif blend_style == "max":
 		pix_arr = np.maximum(pix_arr, blended_frame)
+	elif blend_style == "min":
+		pix_arr = np.minimum(pix_arr, blended_frame)
 	elif blend_style == "diff":
 		pix_arr = np.absolute(pix_arr - blended_frame)
 
